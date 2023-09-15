@@ -6,9 +6,9 @@
 ### To-Do
 
 - [x] Clear code
-- [ ] Perfect collision
-- [ ] Start screen
+- [x] Perfect collision
 - [ ] Optimize difficulty
+- [ ] Start screen
 - [ ] Animations
 - [ ] Fix bullet physics
 - [ ] Sounds effects

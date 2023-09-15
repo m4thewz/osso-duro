@@ -42,8 +42,7 @@ class Game:
             self.prev_time = self.time
             if self.enemy_delay >= 900:
                 self.enemy_delay -= 5
-        for enemy in self.enemies:
-            enemy.update()
+        [enemy.update() for enemy in self.enemies]
 
         self.clock.tick(60)
         self.time = pg.time.get_ticks()
@@ -65,8 +64,11 @@ class Game:
             screen.blit(score, score_rect)
             self.map.draw(screen)
             self.player.draw(screen)
-            for enemy in self.enemies:
-                enemy.draw(screen)
+            [enemy.draw(screen) for enemy in self.enemies]
+            # pg.draw.rect(screen, pg.Color("Red"), self.player.rect, 1)
+            # [pg.draw.rect(screen, pg.Color("Purple"), bullet.rect, 1) for bullet in self.player.bullets]
+            # [pg.draw.rect(screen, pg.Color("Green"), enemy.rect, 1) for enemy in self.enemies]
+
         else:
             image = pg.transform.scale(self.skull, (30 / 100 * WIDTH, 30 / 100 * WIDTH))
             title_size = self.font_title.size("Game Over")

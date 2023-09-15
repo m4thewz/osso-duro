@@ -4,39 +4,49 @@ import math
 from settings import *
 
 
-class Bullet:
+class Bullet(pg.sprite.Sprite):
     def __init__(self, x, y, player):
+        pg.sprite.Sprite.__init__(self)
         dx, dy = player.game.distance(player.rect.center, pg.mouse.get_pos())
         bullet_angle = math.degrees(math.atan2(-dy, dx)) - 90
 
         self.image = pg.transform.rotate(pg.transform.scale(pg.image.load("assets/bullet.png").convert_alpha(), BULLET_SIZE), bullet_angle)
         self.rect = self.image.get_rect(center=(x, y))
+        self.mask = pg.mask.from_surface(self.image)
         self.speed = BULLET_SPEED
         self.angle = math.atan2(dy, dx)
         self.player = player
+        self.group = pg.sprite.Group()
+        self.group.add(self)
+
 
     def update(self):
         game = self.player.game
         self.rect.centerx += math.cos(self.angle) * self.speed
         self.rect.centery += math.sin(self.angle) * self.speed
         for enemy in game.enemies:
-            if pg.Rect.colliderect(self.rect, enemy.rect):
+            if pg.sprite.spritecollide(self, enemy.group, False, pg.sprite.collide_mask):
                 game.enemies.pop(game.enemies.index(enemy))
 
 
-class Player:
+class Player(pg.sprite.Sprite):
     def __init__(self, game):
+        pg.sprite.Sprite.__init__(self)
         self.game = game
         self.hp = 5
         self.direction = 1  # 0: Left, 1: Right
         self.bullets = []
 
         self.sprite = pg.image.load("assets/skeleton.png").convert_alpha()  # W: 128 H: 250
-        self.image = pg.transform.scale(self.sprite, (64, 250 * 64 / 128))  # W: 128 H: 250
-        self.rect = self.image.get_rect(center=(WIDTH / 2, HEIGHT / 2))
         self.gun_sprite = pg.transform.scale(pg.image.load("assets/gun.png").convert_alpha(), (80, 10 * 80 / 30))
+        self.image = pg.transform.scale(self.sprite, (64, 250 * 64 / 128))  # W: 128 H: 250
         self.gun_image = self.gun_sprite
+        self.rect = self.image.get_rect(center=(WIDTH / 2, HEIGHT / 2))
         self.gun_rect = self.gun_image.get_rect(center=(self.rect.x, self.rect.y))
+        self.mask = pg.mask.from_surface(self.image)
+        self.group = pg.sprite.Group()
+        self.group.add(self)
+
 
     def update(self):
         wall = WALL_SIZE * 1.5
