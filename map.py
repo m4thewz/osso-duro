@@ -3,38 +3,15 @@ import random
 from settings import *
 
 map_size = int(WIDTH / TILE_SIZE)
-minimap = []
-
-
-def get_number():
-    n = random.random()
-    if n <= 0.4:
-        return random.randint(2, 3)
-    elif n >= 0.9:
-        return random.randint(7, 9)
-    else:
-        return random.randint(4, 6)
-
-
-for x in range(0, map_size):
-    minimap.append([get_number() for i in range(0, map_size)])
-print(minimap, "\n")
+minimap = [[random.choices([random.randint(2, 3), random.randint(4, 6), random.randint(7, 9)], [0.35, 0.6, 0.05])[0] for _ in range(map_size)] for _ in range(map_size)]
 
 
 class Map:
     def __init__(self):
         self.minimap = minimap
-        self.world_map = {}
-        self.tiles = []
+        self.world_map = {(i, j): value for i, row in enumerate(minimap) for j, value in enumerate(row)}
+        self.tiles = [pg.transform.scale(pg.image.load(f"assets/map/ground{x}.png").convert(), (TILE_SIZE, TILE_SIZE)) for x in range(9)]
         self.wall = pg.transform.scale(pg.image.load("assets/map/ground0.png").convert(), (WALL_SIZE, WALL_SIZE))
-
-        # Set map coordenates and values of tilesets
-        for i, row in enumerate(self.minimap):
-            for j, value in enumerate(row):
-                self.world_map[(i, j)] = value
-        # Replace ground value for image (For not to loses FPS with pg.transform.scale())
-        for x in range(1, 10):
-            self.tiles.append(pg.transform.scale(pg.image.load(f"assets/map/ground{x}.png").convert(), (TILE_SIZE, TILE_SIZE)))
 
     def draw(self, screen):
         # Drawn ground

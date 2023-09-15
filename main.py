@@ -15,6 +15,7 @@ class Game:
         self.font = pg.font.Font("assets/dogicapixel.ttf", MENU_HEIGHT - WALL_SIZE * 2)
         self.font_title = pg.font.Font("assets/dogicapixel.ttf", TILE_SIZE * 2)
         self.font_small = pg.font.Font("assets/dogicapixel.ttf", TILE_SIZE // 3)
+        self.distance = lambda pos1, pos2: (pos2[0] - pos1[0], pos2[1] - pos1[1])
         self.new_game()
 
     def new_game(self, pre=0):
@@ -53,12 +54,12 @@ class Game:
     def draw(self):
         screen = self.screen
 
-        screen.fill("#45293f")
+        screen.fill(BACKGROUND)
         if self.player.hp > 0:
             for pos in range(self.player.hp):
                 x = WALL_SIZE + (self.skull.get_width() + WALL_SIZE) * pos
                 screen.blit(self.skull, (x, WALL_SIZE))
-            score = self.font.render(f"{(self.time - self.pre_time) / 1000 :.1f}", True, pg.Color("White"))
+            score = self.font.render(f"{(self.time - self.pre_time) / 1000 :.1f}", True, WHITE)
             score_rect = score.get_rect(center=(MENU_HEIGHT / 2, MENU_HEIGHT / 2))
             score_rect.right = WIDTH - WALL_SIZE
             screen.blit(score, score_rect)
@@ -75,9 +76,9 @@ class Game:
             score_pos = 85 / 100 * (HEIGHT + MENU_HEIGHT)
 
             screen.blit(image, ((WIDTH - image.get_width()) / 2, (title_pos - image.get_height()) / 2))
-            screen.blit(self.font_title.render("Game Over", True, pg.Color("White")), ((WIDTH - title_size[0]) / 2, title_pos))
-            screen.blit(self.font.render(f"Pontuação: {self.score / 1000 :.2f}", True, pg.Color("White")), ((WIDTH - score_size[0]) / 2, score_pos))
-            screen.blit(self.font_small.render("Pressione espaço para tentar novamente", True, pg.Color("White")), ((WIDTH - retry_size[0]) / 2, score_pos + score_size[1] + 25))
+            screen.blit(self.font_title.render("Game Over", True, WHITE), ((WIDTH - title_size[0]) / 2, title_pos))
+            screen.blit(self.font.render(f"Pontuação: {self.score / 1000 :.2f}", True, WHITE), ((WIDTH - score_size[0]) / 2, score_pos))
+            screen.blit(self.font_small.render("Pressione espaço para tentar novamente", True, WHITE), ((WIDTH - retry_size[0]) / 2, score_pos + score_size[1] + 25))
 
     def run(self):
         while True:
@@ -88,5 +89,4 @@ class Game:
 
 
 if __name__ == "__main__":
-    game = Game()
-    game.run()
+    Game().run()

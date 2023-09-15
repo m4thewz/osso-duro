@@ -5,10 +5,12 @@
 
 ### To-Do
 
-- [ ] Clear code
+- [x] Clear code
+- [ ] Perfect collision
 - [ ] Start screen
 - [ ] Optimize difficulty
 - [ ] Animations
+- [ ] Fix bullet physics
 - [ ] Sounds effects
 - [ ] Music
 - [ ] Shadows
