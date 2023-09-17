@@ -40,8 +40,8 @@ class Game:
         if self.time - self.prev_time >= self.enemy_delay:
             self.enemies.append(Enemy(self))
             self.prev_time = self.time
-            if self.enemy_delay >= 900:
-                self.enemy_delay -= 5
+            if self.enemy_delay != 500:
+                self.enemy_delay -= 2
         [enemy.update() for enemy in self.enemies]
 
         self.clock.tick(60)
@@ -55,6 +55,11 @@ class Game:
 
         screen.fill(BACKGROUND)
         if self.player.hp > 0:
+            self.map.draw(screen)
+            self.player.draw(screen)
+            [enemy.draw(screen) for enemy in self.enemies]
+            self.map.draw_borders(screen)
+            # Top menu
             for pos in range(self.player.hp):
                 x = WALL_SIZE + (self.skull.get_width() + WALL_SIZE) * pos
                 screen.blit(self.skull, (x, WALL_SIZE))
@@ -62,9 +67,6 @@ class Game:
             score_rect = score.get_rect(center=(MENU_HEIGHT / 2, MENU_HEIGHT / 2))
             score_rect.right = WIDTH - WALL_SIZE
             screen.blit(score, score_rect)
-            self.map.draw(screen)
-            self.player.draw(screen)
-            [enemy.draw(screen) for enemy in self.enemies]
             # pg.draw.rect(screen, pg.Color("Red"), self.player.rect, 1)
             # [pg.draw.rect(screen, pg.Color("Purple"), bullet.rect, 1) for bullet in self.player.bullets]
             # [pg.draw.rect(screen, pg.Color("Green"), enemy.rect, 1) for enemy in self.enemies]

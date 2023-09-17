@@ -7,7 +7,7 @@
 
 - [x] Clear code
 - [x] Perfect collision
-- [ ] Optimize difficulty
+- [x] Optimize difficulty
 - [ ] Start screen
 - [ ] Animations
 - [ ] Fix bullet physics

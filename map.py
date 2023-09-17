@@ -18,6 +18,8 @@ class Map:
         for pos in self.world_map:
             x, y = pos[1] * TILE_SIZE, MENU_HEIGHT + pos[0] * TILE_SIZE  # pos = (x, y)
             screen.blit(self.tiles[self.world_map[pos] - 1], (x, y))
+
+    def draw_borders(self, screen):
         for i in range(0, map_size * WALL_DIFF):
             for j in range(0, map_size * WALL_DIFF):
                 if i == 0 or i == map_size * WALL_DIFF - 1:
