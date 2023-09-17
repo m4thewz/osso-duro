@@ -17,6 +17,7 @@ class Game:
         self.font_small = pg.font.Font("assets/dogicapixel.ttf", TILE_SIZE // 3)
         self.distance = lambda pos1, pos2: (pos2[0] - pos1[0], pos2[1] - pos1[1])
         self.new_game()
+        # pg.mouse.set_visible(False)
 
     def new_game(self, pre=0):
         self.map = Map()

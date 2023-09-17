@@ -5,13 +5,12 @@ from settings import *
 
 
 class Bullet(pg.sprite.Sprite):
-    def __init__(self, x, y, player):
+    def __init__(self, player):
         pg.sprite.Sprite.__init__(self)
-        dx, dy = player.game.distance(player.rect.center, pg.mouse.get_pos())
-        bullet_angle = math.degrees(math.atan2(-dy, dx)) - 90
+        dx, dy = player.game.distance(player.gun_rect.center, pg.mouse.get_pos())
 
-        self.image = pg.transform.rotate(pg.transform.scale(pg.image.load("assets/bullet.png").convert_alpha(), BULLET_SIZE), bullet_angle)
-        self.rect = self.image.get_rect(center=(x, y))
+        self.image = pg.transform.rotate(pg.transform.scale(pg.image.load("assets/bullet.png").convert_alpha(), BULLET_SIZE), math.degrees(math.atan2(-dy, dx)))
+        self.rect = self.image.get_rect(center=(player.gun_rect.centerx, player.gun_rect.centery))
         self.mask = pg.mask.from_surface(self.image)
         self.speed = BULLET_SPEED
         self.angle = math.atan2(dy, dx)
@@ -19,6 +18,8 @@ class Bullet(pg.sprite.Sprite):
         self.group = pg.sprite.Group()
         self.group.add(self)
 
+        self.rect.centerx += math.cos(self.angle) * (player.gun_image.get_width() // 2 + 3)
+        self.rect.centery += math.sin(self.angle) * (player.gun_image.get_width() // 2 + 3)
 
     def update(self):
         game = self.player.game
@@ -37,16 +38,15 @@ class Player(pg.sprite.Sprite):
         self.direction = 1  # 0: Left, 1: Right
         self.bullets = []
 
-        self.sprite = pg.image.load("assets/skeleton.png").convert_alpha()  # W: 128 H: 250
-        self.gun_sprite = pg.transform.scale(pg.image.load("assets/gun.png").convert_alpha(), (80, 10 * 80 / 30))
-        self.image = pg.transform.scale(self.sprite, (64, 250 * 64 / 128))  # W: 128 H: 250
+        self.sprite = pg.image.load("assets/skeleton.png").convert_alpha()
+        self.gun_sprite = pg.transform.scale(pg.image.load("assets/handgun.png").convert_alpha(), (PLAYER_WIDTH, 43 * PLAYER_WIDTH / 145))
+        self.image = pg.transform.scale(self.sprite, (PLAYER_WIDTH, 250 * PLAYER_WIDTH / 128))  # W: 128 H: 250
         self.gun_image = self.gun_sprite
         self.rect = self.image.get_rect(center=(WIDTH / 2, HEIGHT / 2))
         self.gun_rect = self.gun_image.get_rect(center=(self.rect.x, self.rect.y))
         self.mask = pg.mask.from_surface(self.image)
         self.group = pg.sprite.Group()
         self.group.add(self)
-
 
     def update(self):
         wall = WALL_SIZE * 1.5
@@ -61,7 +61,7 @@ class Player(pg.sprite.Sprite):
 
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
-            self.bullets.append(Bullet(self.gun_rect.centerx, self.gun_rect.centery, self))
+            self.bullets.append(Bullet(self))
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
@@ -69,14 +69,19 @@ class Player(pg.sprite.Sprite):
         [screen.blit(bullet.image, bullet.rect) for bullet in self.bullets]
 
     def rotate_gun(self):
-        axi = 90 * self.rect.height / 100   # axi of gun rotation
-        dx, dy = self.game.distance(self.rect.center, pg.mouse.get_pos())
-        distance = math.hypot(dx, dy)
-        vx, vy = dx * axi / distance, dy * axi / distance  # makes the hypotenuse of a kind of scale
-        angle = math.degrees(math.atan2(-dy, dx)) - 3
+        def scale(x): return PLAYER_WIDTH * x / 128  # 128: original width
 
-        self.gun_image = pg.transform.rotate(self.gun_sprite, angle)
-        self.gun_rect = self.gun_image.get_rect(center=(self.rect.centerx + vx, self.rect.centery + vy))
+        dx, dy = self.game.distance(self.rect.center, pg.mouse.get_pos())
+        angle = math.degrees(math.atan2(-dy, dx))
+        center_diff = (scale(26), scale(24)) if self.direction else (-scale(25), scale(24)) #center diff to arm
+        origin = (self.rect.centerx - center_diff[0], self.rect.centery - center_diff[1])
+
+        gun_rect = self.gun_sprite.get_rect(topleft=origin) if self.direction else self.gun_sprite.get_rect(bottomleft=origin)
+        pivot = pg.math.Vector2(origin) - gun_rect.center
+        offset = pivot.rotate(-angle)
+        self.gun_image = pg.transform.rotozoom(self.gun_sprite, angle, 1)
+        self.gun_rect = self.gun_image.get_rect(center=(origin[0] - offset.x, origin[1] - offset.y))
+
         self.change_direction(dx)
 
     def movement(self, keys, pos):

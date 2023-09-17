@@ -8,9 +8,9 @@
 - [x] Clear code
 - [x] Perfect collision
 - [x] Optimize difficulty
-- [ ] Start screen
+- [x] Fix bullet physics
 - [ ] Animations
-- [ ] Fix bullet physics
+- [ ] Start screen
 - [ ] Sounds effects
 - [ ] Music
 - [ ] Shadows
