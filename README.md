@@ -9,7 +9,7 @@
 - [x] Perfect collision
 - [x] Optimize difficulty
 - [x] Fix bullet physics
-- [ ] Animations
+- [x] Animations
 - [ ] Start screen
 - [ ] Sounds effects
 - [ ] Music

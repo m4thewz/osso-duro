@@ -26,8 +26,10 @@ class Bullet(pg.sprite.Sprite):
         self.rect.centerx += math.cos(self.angle) * self.speed
         self.rect.centery += math.sin(self.angle) * self.speed
         for enemy in game.enemies:
-            if pg.sprite.spritecollide(self, enemy.group, False, pg.sprite.collide_mask):
-                game.enemies.pop(game.enemies.index(enemy))
+            if enemy.state == "walking" and pg.sprite.spritecollide(self, enemy.group, False, pg.sprite.collide_mask):
+                enemy.state = "dying"
+                enemy.current_sprite = 0
+                self.player.bullets.pop(self.player.bullets.index(self))
 
 
 class Player(pg.sprite.Sprite):
