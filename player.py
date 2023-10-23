@@ -75,7 +75,7 @@ class Player(pg.sprite.Sprite):
 
         dx, dy = self.game.distance(self.rect.center, pg.mouse.get_pos())
         angle = math.degrees(math.atan2(-dy, dx))
-        center_diff = (scale(26), scale(24)) if self.direction else (-scale(25), scale(24)) #center diff to arm
+        center_diff = (scale(26), scale(24)) if self.direction else (-scale(25), scale(24))  # center diff to arm
         origin = (self.rect.centerx - center_diff[0], self.rect.centery - center_diff[1])
 
         gun_rect = self.gun_sprite.get_rect(topleft=origin) if self.direction else self.gun_sprite.get_rect(bottomleft=origin)
