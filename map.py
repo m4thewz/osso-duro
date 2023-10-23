@@ -6,6 +6,7 @@ map_width = WIDTH // TILE_SIZE
 map_height = HEIGHT // TILE_SIZE
 minimap = [[random.choices([random.randint(2, 3), random.randint(4, 6), random.randint(7, 9)], [0.35, 0.6, 0.05])[0] for _ in range(map_width)] for _ in range(map_height)]  # Use map_height instead of map_width here
 
+
 class Map:
     def __init__(self):
         self.minimap = minimap
@@ -26,4 +27,3 @@ class Map:
                     screen.blit(self.wall, (WALL_SIZE * x, MENU_HEIGHT + WALL_SIZE * y))
                 elif y == map_height * WALL_DIFF - 1:  # Use map_height here instead of map_width
                     screen.blit(self.wall, (WALL_SIZE * x, HEIGHT + MENU_HEIGHT - WALL_SIZE))
-

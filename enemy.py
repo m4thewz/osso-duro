@@ -63,6 +63,8 @@ class Enemy(pg.sprite.Sprite):
                 if self.current_sprite > 3:
                     self.game.player.hp -= 1
                     self.game.enemies.pop(self.game.enemies.index(self))
+                if self.game.player.hp == 0:
+                    self.game.write_score()
                 self.prev = self.time
             self.time = pg.time.get_ticks()
         elif self.state == "dying":
