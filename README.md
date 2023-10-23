@@ -3,7 +3,7 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/m4thewz/osso-duro?style=for-the-badge)
 
 > Project created with the aim of learning more about pygame and putting concepts learned into practice.
-> <img src="./screenshot.png" alt="Game preview">
+<img src="./screenshot.png" alt="Game preview">
 
 ### To-Do
 
